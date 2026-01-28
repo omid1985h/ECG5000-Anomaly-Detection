@@ -1,73 +1,105 @@
 # ECG5000 – ECG Arrhythmia Detection using Machine Learning and Deep Learning
 
 ## 1. Project Overview
-This project performs a comprehensive analysis of the ECG5000 dataset, combining **biomedical signal processing, statistical time-series analysis, classical machine learning, and deep learning autoencoders** to detect arrhythmias from single-lead ECG signals.  
-The goal is to explore and benchmark different approaches for **anomaly detection and classification** of ECG beats.
+This project performs a comprehensive analysis of the ECG5000 dataset, combining **biomedical signal processing, statistical time-series analysis, classical machine learning, and deep learning autoencoders** to study arrhythmias from single-lead ECG signals.  
+
+The goals are to explore and benchmark different approaches for **binary classification of normal vs arrhythmic beats** and to investigate **signal reconstruction with autoencoders** for further insights.
+
 
 ---
 
 ## 2. Dataset
-- **ECG5000 dataset**: 5000 single-lead ECG heartbeats, each represented by 140 time-series points plus a class label.  
+- **ECG5000 dataset**: Contains 5000 single-lead ECG heartbeats, each with 140 time-series points plus a class label.  
 - **Data shape**: `(5000, 141)`  
-- **Class distribution (binary mapping)**:
+- **Class distribution (after binary mapping)**:
   - Class 0 (Normal): 2919 samples  
-  - Class 1 (Arrhythmia): 2081 samples  
-- **Binary task**: Class 1 = Normal → 0, All others → 1 (Arrhythmia)
+  - Class 1 (Arrhythmia / Abnormal): 2081 samples  
+- **Binary task**: Map original labels so that Normal beats = 0 and all other arrhythmic beats = 1
+
 
 ---
 
 ## 3. Problem Definition
-**Task:** Binary classification of ECG heartbeats as normal or arrhythmic.  
-**Approaches explored:**
-1. Statistical analysis of ECG signals (ADF test, rolling statistics, ARIMA modeling)  
-2. Feature extraction (HRV metrics) + classical ML classifiers (Random Forest, SVM, Logistic Regression)  
-3. Deep learning autoencoders (CNN and LSTM) for reconstruction-based anomaly detection
+**Task:** Perform binary classification of ECG heartbeats as Normal or Arrhythmic.  
+
+**Methods implemented in this project:**
+1. Statistical analysis of ECG signals, including rolling statistics, ADF test, and ARIMA modeling.  
+2. Feature extraction from ECG signals (HRV metrics) combined with classical machine learning classifiers: Random Forest, SVM, and Logistic Regression.  
+3. Deep learning autoencoders (CNN and LSTM) for ECG signal reconstruction to study waveform patterns.
+
 
 ---
 
 ## 4. Methodology / Pipeline
 
 1. **Data Loading & Preprocessing**
-   - Combined train and test sets
-   - Binary label mapping
-   - Standardization of features/signals
+   - Combined training and test sets into a single dataset  
+   - Applied binary label mapping: Normal = 0, Arrhythmic = 1  
+   - Standardized features/signals for ML and DL models
 
 2. **Statistical Time-Series Analysis**
-   - Rolling mean and standard deviation  
-   - ADF test for stationarity  
-   - Autocorrelation (ACF) and Partial Autocorrelation (PACF)  
-   - ARIMA modeling and residual analysis
+   - Computed rolling mean and standard deviation  
+   - Conducted Augmented Dickey-Fuller (ADF) test for stationarity  
+   - Analyzed autocorrelation (ACF) and partial autocorrelation (PACF)  
+   - Fitted ARIMA models and examined residuals
 
 3. **Feature Extraction**
-   - Bandpass filtering (0.5–8 Hz)  
-   - HRV features: mean heart rate, heart rate variability, peak counts  
+   - Applied bandpass filtering (0.5–8 Hz) to ECG signals  
+   - Extracted HRV-related features: mean heart rate, heart rate variability, and peak counts  
 
-4. **Classical ML**
-   - Random Forest, SVM, Logistic Regression  
-   - Metrics: Precision, Recall, F1
+4. **Classical Machine Learning**
+   - Trained Random Forest, SVM, and Logistic Regression classifiers  
+   - Evaluated models using Precision, Recall, and F1-score  
 
 5. **Deep Learning**
-   - CNN and LSTM autoencoders for reconstruction-based anomaly detection  
+   - Built CNN and LSTM autoencoders to reconstruct ECG waveforms  
+   - Studied reconstruction patterns to analyze signal morphology
+
 
 ---
 
 ## 5. Results
 
-### 5.1 Representative Plots
+### 5.1 Plots
+
 **Example ECG waveform:**  
-![Example ECG waveform](notebooks/figures/example_ecg.png)
+Illustrates a single heartbeat from the dataset.  
+![Example ECG waveform](figures/example_ecg.png)
 
 **Rolling statistics (mean ± std):**  
-- Normal sample  
-![Rolling stats normal](notebooks/figures/rolling_normal.png)  
-- Abnormal sample  
-![Rolling stats abnormal](notebooks/figures/rolling_abnormal.png)
+Shows short-term trends and variability in ECG signals.  
+
+- **Normal sample**  
+![Rolling stats normal](figures/rolling_normal.png)  
+
+- **Abnormal sample**  
+![Rolling stats abnormal](figures/rolling_abnormal.png)
 
 **ARIMA fit & residuals:**  
-- Normal  
-![ARIMA normal](notebooks/figures/arima_normal.png)  
-- Abnormal  
-![ARIMA abnormal](notebooks/figures/arima_abnormal.png)
+Fitted ARIMA models capture the overall signal trends, while residuals highlight the variance not explained by the model.  
+
+- **Normal sample (Fit)**  
+![ARIMA fit normal](figures/arima_fit_normal.png)  
+
+- **Abnormal sample (Fit)**  
+![ARIMA fit abnormal](figures/arima_fit_abnormal.png)  
+
+- **Normal sample (Residuals)**  
+![ARIMA residual normal](figures/arima_residual_normal.png)  
+
+- **Abnormal sample (Residuals)**  
+![ARIMA residual abnormal](figures/arima_residual_abnormal.png)
+
+**CNN & LSTM Reconstruction:**  
+Deep learning autoencoders trained to reconstruct ECG heartbeats, illustrating model capability on normal and abnormal signals.
+
+- **CNN Autoencoder**  
+![CNN reconstruction](figures/cnn_reconstruction.png)  
+
+- **LSTM Autoencoder**  
+![LSTM reconstruction](figures/lstm_reconstruction.png)
+
+
 
 ---
 
@@ -98,12 +130,6 @@ The goal is to explore and benchmark different approaches for **anomaly detectio
 ### 5.4 Deep Learning Autoencoders
 - **CNN Autoencoder:** accurately reconstructed ECG signals; good for anomaly detection  
 - **LSTM Autoencoder:** failed to reconstruct signals; predictions nearly flat (~0)  
-
-**Representative reconstruction plots:**  
-- CNN reconstruction  
-![CNN reconstruction](notebooks/figures/cnn_recon.png)  
-- LSTM reconstruction  
-![LSTM reconstruction](notebooks/figures/lstm_recon.png)
 
 ---
 
